@@ -1,7 +1,7 @@
 #Read from a budget file and create a summary of the information
 import csv
 
-isColumnsLine = True
+# Initialize variables
 totalProfitLosses = 0
 monthsCount = 0
 greatestIncreaseInProfits = 0
