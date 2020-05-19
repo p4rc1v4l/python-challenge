@@ -30,7 +30,7 @@ with open(electionDataFilePath, 'r') as csv_file:
 		if candidateName in listOfCandidates:
 			candidateIndex = listOfCandidates.index(candidateName)
 			votesPerCandidate[candidateIndex] += 1
-		else:
+		else: # Add the candidate to the list of candidate for the first time
 			listOfCandidates.append(candidateName)
 			votesPerCandidate.append(1)
 
