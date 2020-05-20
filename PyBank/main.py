@@ -17,23 +17,36 @@ greatestDecreaseInLosses = 0
 greatestIncreaseInProfitMonth = ""
 greatestDecreaseInLossesMonth = ""
 
+# Store the header row
+readHeaderOnce = False
+headerRow = None
+
 # Read the budget file
 with open(budgetDataFilePath, 'r') as csv_file:
-    csv_reader = csv.DictReader(csv_file)
-    for row in csv_reader:
-        currentMonth = row["Date"]
-        currentProfitLoss = int(row["Profit/Losses"])
+	csv_reader = csv.DictReader(csv_file)
+	for row in csv_reader:
 
-        monthsCount += 1 # count the months
-        totalProfitLosses += currentProfitLoss # add all profit and losses
+		# Header row
+		if (not readHeaderOnce):
+			headerRow = row
+			readHeaderOnce = True
+		
+		currentMonth = row["Date"]
+		currentProfitLoss = int(row["Profit/Losses"])
+		
+		monthsCount += 1 # count the months
+		totalProfitLosses += currentProfitLoss # add all profit and losses
+		
+		# Keep track of the greatest increase in profit or decrease in losses 
+		if (currentProfitLoss > 0 and currentProfitLoss > greatestIncreaseInProfits):
+			greatestIncreaseInProfits = currentProfitLoss
+			greatestIncreaseInProfitMonth = currentMonth
+		elif (currentProfitLoss < 0 and currentProfitLoss < greatestDecreaseInLosses):
+			greatestDecreaseInLosses = currentProfitLoss
+			greatestDecreaseInLossesMonth = currentMonth
 
-        # Keep track of the greatest increase in profit or decrease in losses 
-        if (currentProfitLoss > 0 and currentProfitLoss > greatestIncreaseInProfits):
-        	greatestIncreaseInProfits = currentProfitLoss
-        	greatestIncreaseInProfitMonth = currentMonth
-        elif (currentProfitLoss < 0 and currentProfitLoss < greatestDecreaseInLosses):
-        	greatestDecreaseInLosses = currentProfitLoss
-        	greatestDecreaseInLossesMonth = currentMonth
+# Print header values
+print(f'\nThe headers are: {", ".join(headerRow)}\n')
 
 # Calculate average change
 averageChange = totalProfitLosses/monthsCount
@@ -41,6 +54,7 @@ averageChange = totalProfitLosses/monthsCount
 # Write analysis information summary
 ## Open the file using "write" mode. Specify the variable to hold the contents
 with open(financialAnalysisFilePath, 'w') as fileWriter:
+	fileWriter.write('-------------------------------\n')
 	fileWriter.write('Financial Analysis\n')
 	fileWriter.write('-------------------------------\n')
 	fileWriter.write(f'Total Months: {monthsCount}\n')

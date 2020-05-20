@@ -18,11 +18,21 @@ winner = ""
 mostVotesCandidate = -1
 mostVotesNumber = 0
 
+# Store the header row
+readHeaderOnce = False
+headerRow = None
+
 #  Open CVS file and read data about election
 with open(electionDataFilePath, 'r') as csv_file:
 	csv_reader = csv.DictReader(csv_file)
 	
 	for row in csv_reader:
+
+		# Header row
+		if (not readHeaderOnce):
+			headerRow = row
+			readHeaderOnce = True
+
 		totalNumberOfVotes = totalNumberOfVotes + 1
 		candidateName = row["Candidate"]
 		
@@ -33,6 +43,9 @@ with open(electionDataFilePath, 'r') as csv_file:
 		else: # Add the candidate to the list of candidate for the first time
 			listOfCandidates.append(candidateName)
 			votesPerCandidate.append(1)
+
+# Print header values
+print(f'\nThe headers are: {", ".join(headerRow)}\n')
 
 # Prepare summary information to write to file
 with open(electionAnalysisFilePath, 'w') as fileWriter:
